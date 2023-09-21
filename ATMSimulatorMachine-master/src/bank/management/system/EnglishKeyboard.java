@@ -45,23 +45,25 @@ class EnglishKeyboard extends JFrame implements ActionListener {
         add(keyBoardPanel, BorderLayout.CENTER);
 
         // Create and add the "OK" button at the bottom
-        JButton okButton = new JButton("OK");
+        /*JButton okButton = new JButton("OK");
         okButton.setFont(new Font("Arial", Font.PLAIN, 20));
         okButton.addActionListener(this);
-        add(okButton, BorderLayout.SOUTH);
+        add(okButton, BorderLayout.SOUTH);*/
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton buttonClicked = (JButton) e.getSource();
         String character = buttonClicked.getText();
-        String currentText = displayField.getText(); // Use the display field
-        displayField.setText(currentText + character);
-        textField2.setText(currentText + character); // Fill the main text field as well
-        
         if ("OK".equals(character)) {
             // Close the keyboard when "OK" button is clicked
             dispose();
         }
+        else{
+            String currentText = displayField.getText(); // Use the display field
+            displayField.setText(currentText + character);
+            textField2.setText(currentText + character); // Fill the main text field as well
+        }
+        
     }
 }

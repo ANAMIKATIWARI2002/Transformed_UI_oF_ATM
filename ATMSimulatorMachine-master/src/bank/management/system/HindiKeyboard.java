@@ -3,12 +3,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class HindiKeyboard extends JFrame implements ActionListener, WindowListener {
+public class HindiKeyboard extends JFrame implements ActionListener {
     JTextField textField, textDisplay;
 
     HindiKeyboard(JTextField textField) {
         this.textField = textField;
-
         setTitle("Hindi Keyboard");
         setSize(700, 500);
         setLocationRelativeTo(null);
@@ -36,56 +35,26 @@ public class HindiKeyboard extends JFrame implements ActionListener, WindowListe
         textDisplay.setFont(new Font("Mangal", Font.PLAIN, 20));
         textDisplay.setEditable(false);
 
-        JPanel buttonPanel = new JPanel();
-        JButton okButton = new JButton("ठीक है"); // Set the text to "ठीक है" (OK in Hindi)
+        /*JButton okButton = new JButton("ठीक है"); // Set the text to "ठीक है" (OK in Hindi)
         okButton.setFont(new Font("Mangal", Font.PLAIN, 16));
-        okButton.addActionListener(this);
-        buttonPanel.add(okButton);
+        okButton.addActionListener(this);*/
 
         add(textDisplay, BorderLayout.NORTH);
         add(keyboardPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
-
-        // Add a window listener to handle the keyboard window close event
-        addWindowListener(this);
+        //add(okButton, BorderLayout.SOUTH);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    if (e.getSource() instanceof JButton) {
         JButton buttonClicked = (JButton) e.getSource();
         String character = buttonClicked.getText();
-        String currentText = textDisplay.getText();
-        textDisplay.setText(currentText + character);
-    } else if (e.getActionCommand().equals("ठीक है")) { // Check for the Hindi label
-        // Close the keyboard without copying the text
-        dispose(); // Close the keyboard window
+        if ("ठीक है".equals(character)) {
+            // Close the keyboard window
+            dispose();
+        } else {
+            String currentText = textDisplay.getText();
+            textDisplay.setText(currentText + character);
+            textField.setText(currentText + character);
+        }
     }
-}
-
-
-    @Override
-    public void windowOpened(WindowEvent e) {}
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        // Copy the text from textDisplay to the main text field (tf2)
-        textField.setText(textDisplay.getText());
-        dispose(); // Close the keyboard window
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {}
-
-    @Override
-    public void windowIconified(WindowEvent e) {}
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {}
-
-    @Override
-    public void windowActivated(WindowEvent e) {}
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {}
 }

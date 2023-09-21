@@ -8,7 +8,7 @@ import java.sql.*;
 public class Login extends JFrame implements ActionListener {
     JLabel text, l2, l3;
     JTextField tf1,tf2;
-    JPasswordField pf2;
+    JPasswordField pf1;
     JButton b1, b2;
     String pinnumber;
     HindiKeyboard hindiKeyboard; 
@@ -68,7 +68,18 @@ public class Login extends JFrame implements ActionListener {
         tf1.setBounds(410, 490, 230, 40);
         tf1.setFont(new Font("mangal", Font.BOLD, 14));
         add(tf1);
+        
+        l3 = new JLabel("PIN:");
+        l3.setFont(new Font("Raleway", Font.BOLD, 28));
+        l3.setForeground(Color.BLACK);
+        l3.setBounds(250, 540, 375, 30);
+        image.add(l3);
 
+        pf1 = new JPasswordField(15);
+        pf1.setBounds(410, 540, 230, 40);
+        pf1.setFont(new Font("arial", Font.BOLD, 14));
+        add(pf1);
+        
         b1 = new JButton("SIGN IN");
         b1.setBackground(Color.BLACK);
         b1.setForeground(Color.WHITE);
@@ -87,24 +98,26 @@ public class Login extends JFrame implements ActionListener {
 
         getContentPane().setBackground(Color.BLACK);
 
-        // Initialize the HindiKeyboard
+        // Initialize the HindiKeyboard and EnglishKeyboard
         hindiKeyboard = new HindiKeyboard(tf1);
+        englishKeyboard = new EnglishKeyboard(tf2);
 
         tf1.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 // Show the Hindi keyboard when the text field is clicked
                 hindiKeyboard.setVisible(true);
+                englishKeyboard.setVisible(false); // Hide the English keyboard
             }
         });
-        englishKeyboard = new EnglishKeyboard(tf2);
 
         tf2.addFocusListener(new FocusAdapter() {
-        @Override
-        public void focusGained(FocusEvent e) {
-            // Show the English keyboard when the text field is clicked
-            englishKeyboard.setVisible(true);
-        }
+            @Override
+            public void focusGained(FocusEvent e) {
+                // Show the English keyboard when the text field is clicked
+                englishKeyboard.setVisible(true);
+                hindiKeyboard.setVisible(false); // Hide the Hindi keyboard
+            }
         });
     }
 
@@ -112,10 +125,13 @@ public class Login extends JFrame implements ActionListener {
         if (ae.getSource() == b2) {
             tf1.setText("");
             tf2.setText("");
+            pf1.setText("");
         } else if (ae.getSource() == b1) {
             conn c = new conn();
-            String cardNumber = tf1.getText();
-            String q1 = "select * from login where cardnumber='" + cardNumber + "'";
+            String Name = tf2.getText();
+            String Hname= tf1.getText();
+            String pin=pf1.getText();
+            String q1 = "select * from login where name='" + Name + "' and hname='" + Hname + "' and pin='" + pin + "'";
             try {
                 ResultSet rs = c.s.executeQuery(q1);
                 if (rs.next()) {
@@ -136,5 +152,4 @@ public class Login extends JFrame implements ActionListener {
     public static void main(String[] args) {
         new Login().setVisible(true);
     }
-
 }
