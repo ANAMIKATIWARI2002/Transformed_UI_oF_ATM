@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
-import java.util.*;
 
 public class enterpin_hindi extends JFrame implements ActionListener {
     JButton withdraw, back;
-    JTextField amount;
     String pinnumber;
     private JPanel keyboardPanel;
+    private int wrongAttempts = 0; // Counter for wrong PIN attempts
+    private JTextField pinField; // Add a pin text field variable
 
     public enterpin_hindi(String pinnumber) {
         this.pinnumber = pinnumber;
@@ -32,10 +32,11 @@ public class enterpin_hindi extends JFrame implements ActionListener {
         text.setBounds(250, 250, 400, 20);
         image.add(text);
 
-        amount = new JTextField();
-        amount.setFont(new Font("Raleway", Font.BOLD, 22));
-        amount.setBounds(250, 280, 320, 25);
-        image.add(amount);
+        pinField = new JTextField(); // Initialize the pin text field
+        pinField.setFont(new Font("Raleway", Font.BOLD, 22));
+        pinField.setBounds(250, 280, 320, 25);
+        pinField.setBackground(Color.WHITE); // Set the initial background color to white
+        image.add(pinField); // Add the pin text field
 
         JLabel text2 = new JLabel("प्रवेश करना");
         text2.setBounds(900, 410, 150, 64);
@@ -83,26 +84,43 @@ public class enterpin_hindi extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == withdraw) {
-            String number = amount.getText();
-            Date date = new Date();
+            String number = pinField.getText(); // Use pinField instead of amount
             if (number.equals("")) {
                 JLabel label8 = new JLabel("कृपया अपना पिन नंबर दर्ज करें");
-                        Font customFont = new Font("mangal", Font.BOLD, 16); // You can change the font properties here
-                        label8.setFont(customFont);
+                Font customFont = new Font("mangal", Font.BOLD, 16); // You can change the font properties here
+                label8.setFont(customFont);
                 JOptionPane.showMessageDialog(null, label8);
             } else {
                 conn c = new conn();
-                String q1="select * from login where pin='"+number+"'";
-                try {ResultSet rs=c.s.executeQuery(q1);
-               if(rs.next()){
-                   setVisible(false);
-                   new exitpage_hindi().setVisible(true);
-               }else {
-                   JLabel label4 = new JLabel("ग़लत पिन नंबर");
-                        Font customFont = new Font("mangal", Font.BOLD, 16); // You can change the font properties here
-                        label4.setFont(customFont);
-                   JOptionPane.showMessageDialog(null,label4);
-               }
+                String q1 = "select * from login where pin='" + number + "'";
+                try {
+                    ResultSet rs = c.s.executeQuery(q1);
+                    if (rs.next()) {
+                        setVisible(false);
+                        new exitpage_hindi().setVisible(true);
+                    } else {
+                        JLabel label9 = new JLabel("ग़लत पिन नंबर");
+                            Font customFont4 = new Font("mangal", Font.BOLD, 16);
+                            label9.setFont(customFont4);
+                            JOptionPane.showMessageDialog(null, label9);
+                        wrongAttempts++; // Increment the wrong attempts counter
+                        if (wrongAttempts == 1) {
+                            // Set the background color of pinField to yellow after the first wrong attempt
+                            pinField.setBackground(Color.YELLOW);
+                            JLabel label5 = new JLabel("ग़लत पिन, सावधानी से दर्ज करें");
+                            Font customFont1 = new Font("mangal", Font.BOLD, 16);
+                            label5.setFont(customFont1);
+                            JOptionPane.showMessageDialog(null, label5);
+                        } else if (wrongAttempts == 2) {
+                            JLabel label6 = new JLabel("आखिरी अवसर, इसके बाद खाता ब्लॉक हो जाएगा");
+                            Font customFont2 = new Font("mangal", Font.BOLD, 16);
+                            label6.setFont(customFont2);
+                            JOptionPane.showMessageDialog(null, label6);
+                        } else if (wrongAttempts == 3) {
+                            JOptionPane.showMessageDialog(null, "तीन ग़लत प्रयास, खाता ब्लॉक हो गया");
+                            System.exit(0); // Exit the application after three wrong attempts
+                        }
+                    }
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -114,11 +132,11 @@ public class enterpin_hindi extends JFrame implements ActionListener {
             // Handle button clicks from the keyboard panel
             String buttonText = ((JButton) ae.getSource()).getText();
             if (buttonText.equals("Clear")) {
-                amount.setText(""); // Clear the amount field
+                pinField.setText(""); // Clear the pinField
             } else {
-                // Append the button text to the amount field
-                String currentAmount = amount.getText();
-                amount.setText(currentAmount + buttonText);
+                // Append the button text to the pinField
+                String currentPin = pinField.getText();
+                pinField.setText(currentPin + buttonText);
             }
         }
     }
@@ -127,4 +145,3 @@ public class enterpin_hindi extends JFrame implements ActionListener {
         new enterpin_hindi("");
     }
 }
-

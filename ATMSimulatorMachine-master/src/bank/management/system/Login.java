@@ -7,13 +7,16 @@ import java.sql.*;
 
 public class Login extends JFrame implements ActionListener {
     JLabel text, l2, l3;
-    JTextField tf1,tf2;
+    JTextField tf1, tf2;
     JPasswordField pf1;
     JButton b1, b2;
     String pinnumber;
-    HindiKeyboard hindiKeyboard; 
+    HindiKeyboard hindiKeyboard;
     EnglishKeyboard englishKeyboard;
-
+    int wrongAttempts = 0; // Counter for wrong PIN attempts
+    boolean isFirstWrongAttempt = true; // Flag to track the first wrong attempt
+    boolean isKeyboardOpen;
+    
     Login() {
         setTitle("AUTOMATED TELLER MACHINE");
         setSize(1300, 850);
@@ -27,7 +30,7 @@ public class Login extends JFrame implements ActionListener {
         JLabel image = new JLabel(i3);
         image.setBounds(0, 0, 1300, 850);
         add(image);
-
+        
         ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/card1.jpg"));
         Image i5 = i4.getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT);
         ImageIcon i6 = new ImageIcon(i5);
@@ -99,15 +102,17 @@ public class Login extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.BLACK);
 
         // Initialize the HindiKeyboard and EnglishKeyboard
-        hindiKeyboard = new HindiKeyboard(tf1);
-        englishKeyboard = new EnglishKeyboard(tf2);
+        hindiKeyboard = new HindiKeyboard(tf1,this);
+        englishKeyboard = new EnglishKeyboard(tf2,this);
 
         tf1.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 // Show the Hindi keyboard when the text field is clicked
-                hindiKeyboard.setVisible(true);
-                englishKeyboard.setVisible(false); // Hide the English keyboard
+                if (!isKeyboardOpen) {
+                    hindiKeyboard.setVisible(true);
+                    isKeyboardOpen = false;
+                }
             }
         });
 
@@ -115,8 +120,10 @@ public class Login extends JFrame implements ActionListener {
             @Override
             public void focusGained(FocusEvent e) {
                 // Show the English keyboard when the text field is clicked
-                englishKeyboard.setVisible(true);
-                hindiKeyboard.setVisible(false); // Hide the Hindi keyboard
+                if (!isKeyboardOpen) {
+                    englishKeyboard.setVisible(true);
+                    isKeyboardOpen = false;
+                }
             }
         });
     }
@@ -129,19 +136,39 @@ public class Login extends JFrame implements ActionListener {
         } else if (ae.getSource() == b1) {
             conn c = new conn();
             String Name = tf2.getText();
-            String Hname= tf1.getText();
-            String pin=pf1.getText();
-            String q1 = "select * from login where name='" + Name + "' and hname='" + Hname + "' and pin='" + pin + "'";
+            String Hname = tf1.getText();
+            String pin = new String(pf1.getPassword()); // Get the PIN as a String
+            String q1 = "select * from login where (name='" + Name + "' OR hname='" + Hname + "') AND pin='" + pin + "'";
             try {
                 ResultSet rs = c.s.executeQuery(q1);
                 if (rs.next()) {
                     setVisible(false);
                     new hindi_english_option(pinnumber).setVisible(true);
                 } else {
-                    JLabel label4 = new JLabel("ग़लत कार्ड नंबर ");
-                    Font customFont = new Font("mangal", Font.BOLD, 16);
-                    label4.setFont(customFont);
-                    JOptionPane.showMessageDialog(null, label4);
+                    wrongAttempts++; // Increment the wrong attempts counter
+                    if (wrongAttempts == 1) {
+                        JLabel label5 = new JLabel("गलत पिन या नाम, ध्यानपूर्वक दर्ज करें");
+                        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+                        label5.setFont(customFont1);
+                        JOptionPane.showMessageDialog(null, label5);
+                        if (isFirstWrongAttempt) {
+                            pf1.setBackground(Color.YELLOW); // Change the background color to yellow
+                            isFirstWrongAttempt = false; // Set it to false after the first wrong attempt
+                        }
+                    }
+                    if (wrongAttempts == 2) {
+                        JLabel label6 = new JLabel("आखिरी मौका, इसके बाद अकाउंट हो जाएगा ब्लॉक");
+                        Font customFont2 = new Font("mangal", Font.BOLD, 16);
+                        label6.setFont(customFont2);
+                        JOptionPane.showMessageDialog(null, label6);
+                    }
+                    if (wrongAttempts >= 3) {
+                        JLabel label7 = new JLabel("लगातार तीन गलत प्रयास, अकाउंट ब्लॉक");
+                        Font customFont3 = new Font("mangal", Font.BOLD, 16);
+                        label7.setFont(customFont3);
+                        JOptionPane.showMessageDialog(null, label7);
+                        System.exit(0); // Exit the application after three wrong attempts
+                    }
                 }
             } catch (Exception e) {
                 System.out.println(e);

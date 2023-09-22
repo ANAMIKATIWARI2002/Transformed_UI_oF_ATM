@@ -4,13 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
-import java.util.*;
+import javax.swing.BorderFactory; // Import the BorderFactory class
 
 public class enterpin extends JFrame implements ActionListener {
     JButton withdraw, back;
     JTextField amount;
+    JTextField pinField; // Add a pin text field variable
     String pinnumber;
     private JPanel keyboardPanel;
+    private int wrongAttempts = 0; // Counter for wrong PIN attempts
 
     public enterpin(String pinnumber) {
         this.pinnumber = pinnumber;
@@ -32,10 +34,11 @@ public class enterpin extends JFrame implements ActionListener {
         text.setBounds(250, 250, 400, 20);
         image.add(text);
 
-        amount = new JTextField();
-        amount.setFont(new Font("Raleway", Font.BOLD, 22));
-        amount.setBounds(250, 280, 320, 25);
-        image.add(amount);
+        pinField = new JTextField(); // Initialize the pin text field
+        pinField.setFont(new Font("Raleway", Font.BOLD, 22));
+        pinField.setBounds(250, 280, 320, 25);
+        pinField.setBackground(Color.WHITE); // Set the initial background color to white
+        image.add(pinField); // Add the pin text field
 
         JLabel text2 = new JLabel("ENTER");
         text2.setBounds(900, 410, 150, 64);
@@ -83,20 +86,37 @@ public class enterpin extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == withdraw) {
-            String number = amount.getText();
-            Date date = new Date();
+            String number = pinField.getText(); // Use pinField instead of amount
             if (number.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please Enter your Pin Number");
             } else {
                 conn c = new conn();
-                String q1="select * from login where pin='"+number+"'";
-                try {ResultSet rs=c.s.executeQuery(q1);
-               if(rs.next()){
-                   setVisible(false);
-                   new exitpage().setVisible(true);
-               }else {
-                   JOptionPane.showMessageDialog(null,"Incorrect Password");
-               }
+                String q1 = "select * from login where pin='" + number + "'";
+                try {
+                    ResultSet rs = c.s.executeQuery(q1);
+                    if (rs.next()) {
+                        setVisible(false);
+                        new exitpage().setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Incorrect Password");
+                        wrongAttempts++; // Increment the wrong attempts counter
+                        if (wrongAttempts == 1) {
+                            // Set the background color of pinField to yellow after the first wrong attempt
+                            pinField.setBackground(Color.YELLOW);
+                            JLabel label5 = new JLabel("Wrong pin, enter carefully");
+                            Font customFont1 = new Font("osward", Font.BOLD, 16);
+                            label5.setFont(customFont1);
+                            JOptionPane.showMessageDialog(null, label5);
+                        } else if (wrongAttempts == 2) {
+                            JLabel label6 = new JLabel("Last chance, after this, the account will be blocked");
+                            Font customFont2 = new Font("osward", Font.BOLD, 16);
+                            label6.setFont(customFont2);
+                            JOptionPane.showMessageDialog(null, label6);
+                        } else if (wrongAttempts == 3) {
+                            JOptionPane.showMessageDialog(null, "Three wrong attempts, account blocked");
+                            System.exit(0); // Exit the application after three wrong attempts
+                        }
+                    }
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -108,11 +128,11 @@ public class enterpin extends JFrame implements ActionListener {
             // Handle button clicks from the keyboard panel
             String buttonText = ((JButton) ae.getSource()).getText();
             if (buttonText.equals("Clear")) {
-                amount.setText(""); // Clear the amount field
+                pinField.setText(""); // Clear the pinField
             } else {
-                // Append the button text to the amount field
-                String currentAmount = amount.getText();
-                amount.setText(currentAmount + buttonText);
+                // Append the button text to the pinField
+                String currentPin = pinField.getText();
+                pinField.setText(currentPin + buttonText);
             }
         }
     }
@@ -121,4 +141,3 @@ public class enterpin extends JFrame implements ActionListener {
         new enterpin("");
     }
 }
-
