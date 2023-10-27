@@ -8,12 +8,14 @@ import javax.swing.BorderFactory; // Import the BorderFactory class
 
 public class enterpin extends JFrame implements ActionListener {
     JButton withdraw, back;
+    JLabel label5,label6,label7;
     JTextField amount;
     JTextField pinField; // Add a pin text field variable
     String pinnumber;
     private JPanel keyboardPanel;
     private int wrongAttempts = 0; // Counter for wrong PIN attempts
 
+    
     public enterpin(String pinnumber) {
         this.pinnumber = pinnumber;
         setSize(1300, 850);
@@ -27,6 +29,13 @@ public class enterpin extends JFrame implements ActionListener {
         JLabel image = new JLabel(i3);
         image.setBounds(0, 0, 1300, 850);
         add(image);
+        
+         ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/pin_protect.jpg"));
+        Image i5 = i4.getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT);
+        ImageIcon i6 = new ImageIcon(i5);
+        JLabel image2 = new JLabel(i6);
+        image2.setBounds(800, 150, 200, 250);
+        image.add(image2);
 
         JLabel text = new JLabel("Enter your Pin Number");
         text.setForeground(Color.BLACK);
@@ -41,13 +50,13 @@ public class enterpin extends JFrame implements ActionListener {
         image.add(pinField); // Add the pin text field
 
         JLabel text2 = new JLabel("ENTER");
-        text2.setBounds(900, 410, 150, 64);
+        text2.setBounds(900, 550, 150, 64);
         text2.setForeground(Color.BLACK);
         text2.setFont(new Font("System", Font.BOLD, 20));
         image.add(text2);
 
         withdraw = new JButton("");
-        withdraw.setBounds(1095, 408, 138, 64);
+        withdraw.setBounds(1095, 550, 138, 64);
         image.add(withdraw);
         withdraw.addActionListener(this);
 
@@ -98,22 +107,41 @@ public class enterpin extends JFrame implements ActionListener {
                         setVisible(false);
                         new exitpage().setVisible(true);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Incorrect Password");
+                       
                         wrongAttempts++; // Increment the wrong attempts counter
                         if (wrongAttempts == 1) {
-                            // Set the background color of pinField to yellow after the first wrong attempt
-                            pinField.setBackground(Color.YELLOW);
-                            JLabel label5 = new JLabel("Wrong pin, enter carefully");
-                            Font customFont1 = new Font("osward", Font.BOLD, 16);
+                            label5 = new JLabel("Incorrect PIN or name, enter carefully");
+                            Font customFont1 = new Font("Osward", Font.BOLD, 16);
                             label5.setFont(customFont1);
-                            JOptionPane.showMessageDialog(null, label5);
-                        } else if (wrongAttempts == 2) {
-                            JLabel label6 = new JLabel("Last chance, after this, the account will be blocked");
-                            Font customFont2 = new Font("osward", Font.BOLD, 16);
+                            label6 = new JLabel("Last chance, after this the account will be blocked");
+                            Font customFont2 = new Font("Osward", Font.BOLD, 16);
                             label6.setFont(customFont2);
-                            JOptionPane.showMessageDialog(null, label6);
-                        } else if (wrongAttempts == 3) {
-                            JOptionPane.showMessageDialog(null, "Three wrong attempts, account blocked");
+                            label7 = new JLabel("Three consecutive wrong attempts, account blocked");
+                            Font customFont3 = new Font("Osward", Font.BOLD, 16);
+                            label7.setFont(customFont3);
+                            
+                            int option = JOptionPane.showOptionDialog(this, label5, "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Retry", "Exit"}, "Retry");
+
+                            if (option == JOptionPane.YES_OPTION) {
+                            pinField.setText("");
+                            pinField.setBackground(Color.YELLOW); 
+                            } else {
+                                    System.exit(0); // Exit the application if the user clicks "Cancel"
+                            }
+                        } else if (wrongAttempts == 2) {
+                        // Show a custom message dialog for the second wrong attempt
+                            int option = JOptionPane.showOptionDialog(this, label6, "Error", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"Retry", "Exit"}, "Retry");
+
+                            if (option == JOptionPane.YES_OPTION) {
+                            // User clicked "Retry," clear the fields
+                            pinField.setText("");
+                            pinField.setBackground(Color.YELLOW); 
+                            } else {
+                                System.exit(0); // Exit the application if the user clicks "Cancel"
+                            }
+                        } else if (wrongAttempts >= 3) {
+                            // Show a custom message dialog for the third wrong attempt
+                            JOptionPane.showMessageDialog(this, label7, "Account Blocked", JOptionPane.ERROR_MESSAGE);
                             System.exit(0); // Exit the application after three wrong attempts
                         }
                     }

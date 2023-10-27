@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 public class enterpin_hindi extends JFrame implements ActionListener {
     JButton withdraw, back;
     String pinnumber;
+    JLabel label5,label6,label7;
     private JPanel keyboardPanel;
     private int wrongAttempts = 0; // Counter for wrong PIN attempts
     private JTextField pinField; // Add a pin text field variable
@@ -25,6 +26,13 @@ public class enterpin_hindi extends JFrame implements ActionListener {
         JLabel image = new JLabel(i3);
         image.setBounds(0, 0, 1300, 850);
         add(image);
+        
+        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/pin_protect.jpg"));
+        Image i5 = i4.getImage().getScaledInstance(200, 300, Image.SCALE_DEFAULT);
+        ImageIcon i6 = new ImageIcon(i5);
+        JLabel image2 = new JLabel(i6);
+        image2.setBounds(800, 150, 200, 250);
+        image.add(image2);
 
         JLabel text = new JLabel("अपना पिन नंबर दर्ज करें");
         text.setForeground(Color.BLACK);
@@ -39,13 +47,13 @@ public class enterpin_hindi extends JFrame implements ActionListener {
         image.add(pinField); // Add the pin text field
 
         JLabel text2 = new JLabel("प्रवेश करना");
-        text2.setBounds(900, 410, 150, 64);
+        text2.setBounds(900, 550, 150, 64);
         text2.setForeground(Color.BLACK);
         text2.setFont(new Font("mangal", Font.BOLD, 20));
         image.add(text2);
 
         withdraw = new JButton("");
-        withdraw.setBounds(1095, 408, 138, 64);
+        withdraw.setBounds(1095, 550, 138, 64);
         image.add(withdraw);
         withdraw.addActionListener(this);
 
@@ -99,25 +107,41 @@ public class enterpin_hindi extends JFrame implements ActionListener {
                         setVisible(false);
                         new exitpage_hindi().setVisible(true);
                     } else {
-                        JLabel label9 = new JLabel("ग़लत पिन नंबर");
-                            Font customFont4 = new Font("mangal", Font.BOLD, 16);
-                            label9.setFont(customFont4);
-                            JOptionPane.showMessageDialog(null, label9);
+                       
                         wrongAttempts++; // Increment the wrong attempts counter
                         if (wrongAttempts == 1) {
-                            // Set the background color of pinField to yellow after the first wrong attempt
-                            pinField.setBackground(Color.YELLOW);
-                            JLabel label5 = new JLabel("ग़लत पिन, सावधानी से दर्ज करें");
+                            label5 = new JLabel("गलत पिन या नाम, ध्यानपूर्वक दर्ज करें");
                             Font customFont1 = new Font("mangal", Font.BOLD, 16);
                             label5.setFont(customFont1);
-                            JOptionPane.showMessageDialog(null, label5);
-                        } else if (wrongAttempts == 2) {
-                            JLabel label6 = new JLabel("आखिरी अवसर, इसके बाद खाता ब्लॉक हो जाएगा");
+                            label6 = new JLabel("आखिरी मौका, इसके बाद अकाउंट हो जाएगा ब्लॉक");
                             Font customFont2 = new Font("mangal", Font.BOLD, 16);
                             label6.setFont(customFont2);
-                            JOptionPane.showMessageDialog(null, label6);
-                        } else if (wrongAttempts == 3) {
-                            JOptionPane.showMessageDialog(null, "तीन ग़लत प्रयास, खाता ब्लॉक हो गया");
+                            label7 = new JLabel("लगातार तीन गलत प्रयास, अकाउंट ब्लॉक");
+                            Font customFont3 = new Font("mangal", Font.BOLD, 16);
+                            label7.setFont(customFont3);
+                            
+                            int option = JOptionPane.showOptionDialog(this, label5, "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Retry", "Exit"}, "Retry");
+
+                            if (option == JOptionPane.YES_OPTION) {
+                            pinField.setText("");
+                            pinField.setBackground(Color.YELLOW); 
+                            } else {
+                                    System.exit(0); // Exit the application if the user clicks "Cancel"
+                            }
+                        } else if (wrongAttempts == 2) {
+                        // Show a custom message dialog for the second wrong attempt
+                            int option = JOptionPane.showOptionDialog(this, label6, "Error", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"Retry", "Exit"}, "Retry");
+
+                            if (option == JOptionPane.YES_OPTION) {
+                            // User clicked "Retry," clear the fields
+                            pinField.setText("");
+                            pinField.setBackground(Color.YELLOW); 
+                            } else {
+                                System.exit(0); // Exit the application if the user clicks "Cancel"
+                            }
+                        } else if (wrongAttempts >= 3) {
+                            // Show a custom message dialog for the third wrong attempt
+                            JOptionPane.showMessageDialog(this, label7, "Account Blocked", JOptionPane.ERROR_MESSAGE);
                             System.exit(0); // Exit the application after three wrong attempts
                         }
                     }

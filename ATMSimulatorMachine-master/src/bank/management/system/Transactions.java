@@ -111,30 +111,52 @@ public class Transactions extends JFrame implements ActionListener{
         exit.addActionListener(this);
     }
     
-    public void actionPerformed(ActionEvent ae){
-        if(ae.getSource()==exit){
-            System.exit(0);
-        }else if(ae.getSource()==deposit){
-            setVisible(false);
-            new Deposite(pinnumber).setVisible(true);
-        }else if(ae.getSource()==withdrawl){
-            setVisible(false);
-            new Withdraw(pinnumber).setVisible(true);
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == exit) {
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Exit Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+        } else if (ae.getSource() == deposit) {
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to make a deposit?", "Deposit Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                setVisible(false);
+                new Deposite(pinnumber).setVisible(true);
+            }
+        } else if (ae.getSource() == withdrawl) {
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to make a withdrawal?", "Withdrawal Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                setVisible(false);
+                new Withdraw(pinnumber).setVisible(true);
+            }
         }
         else if(ae.getSource()==fastcash){
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want fastcash?", "Fastcash Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION){
             setVisible(false);
             new FastCash(pinnumber).setVisible(true);
+            }
         }
         else if(ae.getSource()==pinchange){
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to change pin?", "PinChange Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION){
             setVisible(false);
             new Pin(pinnumber).setVisible(true);
+            
+            }
         }
         else if(ae.getSource()==balanceenquiry){
+            int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to enquire for balance?", "Balance Enquiry Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION){
             setVisible(false);
             new BalanceEnquiry(pinnumber).setVisible(true);
+            }
         }
          else if(ae.getSource()==mini){
+             int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want a mini statement?", "Mini Statement Confirmation", JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION){
             new MiniStatement(pinnumber).setVisible(true);
+            }
         }
     }
     public static void main(String args[]){

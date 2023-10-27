@@ -6,11 +6,12 @@ import javax.swing.*;
 import java.sql.*;
 
 public class Login extends JFrame implements ActionListener {
-    JLabel text, l2, l3;
+    JLabel text, l2, l3,label5,label6,label7;
     JTextField tf1, tf2;
     JPasswordField pf1;
-    JButton b1, b2;
+    JButton b1, b2;//
     String pinnumber;
+    boolean ishindi=false;
     HindiKeyboard hindiKeyboard;
     EnglishKeyboard englishKeyboard;
     int wrongAttempts = 0; // Counter for wrong PIN attempts
@@ -111,6 +112,7 @@ public class Login extends JFrame implements ActionListener {
                 // Show the Hindi keyboard when the text field is clicked
                 if (!isKeyboardOpen) {
                     hindiKeyboard.setVisible(true);
+                    ishindi=true;
                     isKeyboardOpen = false;
                 }
             }
@@ -122,7 +124,7 @@ public class Login extends JFrame implements ActionListener {
                 // Show the English keyboard when the text field is clicked
                 if (!isKeyboardOpen) {
                     englishKeyboard.setVisible(true);
-                    isKeyboardOpen = false;
+                    isKeyboardOpen =false;
                 }
             }
         });
@@ -143,37 +145,71 @@ public class Login extends JFrame implements ActionListener {
                 ResultSet rs = c.s.executeQuery(q1);
                 if (rs.next()) {
                     setVisible(false);
-                    new hindi_english_option(pinnumber).setVisible(true);
-                } else {
-                    wrongAttempts++; // Increment the wrong attempts counter
-                    if (wrongAttempts == 1) {
-                        JLabel label5 = new JLabel("गलत पिन या नाम, ध्यानपूर्वक दर्ज करें");
+                    if(ishindi)
+                    new Transactions_hindi(pinnumber).setVisible(true);
+                    else 
+                    new Transactions(pinnumber).setVisible(true);
+                }else {
+            wrongAttempts++; // Increment the wrong attempts counter
+            if (wrongAttempts == 1) {
+                // Show a custom message dialog for the first wrong attempt
+                if(ishindi){
+                label5 = new JLabel("गलत पिन या नाम, ध्यानपूर्वक दर्ज करें");
                         Font customFont1 = new Font("mangal", Font.BOLD, 16);
                         label5.setFont(customFont1);
-                        JOptionPane.showMessageDialog(null, label5);
-                        if (isFirstWrongAttempt) {
-                            pf1.setBackground(Color.YELLOW); // Change the background color to yellow
-                            isFirstWrongAttempt = false; // Set it to false after the first wrong attempt
-                        }
-                    }
-                    if (wrongAttempts == 2) {
-                        JLabel label6 = new JLabel("आखिरी मौका, इसके बाद अकाउंट हो जाएगा ब्लॉक");
+                label6 = new JLabel("आखिरी मौका, इसके बाद अकाउंट हो जाएगा ब्लॉक");
                         Font customFont2 = new Font("mangal", Font.BOLD, 16);
                         label6.setFont(customFont2);
-                        JOptionPane.showMessageDialog(null, label6);
-                    }
-                    if (wrongAttempts >= 3) {
-                        JLabel label7 = new JLabel("लगातार तीन गलत प्रयास, अकाउंट ब्लॉक");
+                label7 = new JLabel("लगातार तीन गलत प्रयास, अकाउंट ब्लॉक");
                         Font customFont3 = new Font("mangal", Font.BOLD, 16);
                         label7.setFont(customFont3);
-                        JOptionPane.showMessageDialog(null, label7);
-                        System.exit(0); // Exit the application after three wrong attempts
-                    }
                 }
-            } catch (Exception e) {
-                System.out.println(e);
+                else{
+                label5 = new JLabel("Incorrect PIN or name, enter carefully");
+                        Font customFont1 = new Font("Osward", Font.BOLD, 16);
+                        label5.setFont(customFont1);
+                label6 = new JLabel("Last chance, after this the account will be blocked");
+                        Font customFont2 = new Font("Osward", Font.BOLD, 16);
+                        label6.setFont(customFont2);
+                label7 = new JLabel("Three consecutive wrong attempts, account blocked");
+                        Font customFont3 = new Font("Osward", Font.BOLD, 16);
+                        label7.setFont(customFont3);
+                }
+                        
+                int option = JOptionPane.showOptionDialog(this, label5, "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"Retry", "Exit"}, "Retry");
+
+                if (option == JOptionPane.YES_OPTION) {
+                    // User clicked "Retry," clear the fields
+                    tf1.setText("");
+                    tf2.setText("");
+                    pf1.setText("");
+                    pf1.setBackground(Color.YELLOW); 
+                } else {
+                    System.exit(0); // Exit the application if the user clicks "Cancel"
+                }
+            } else if (wrongAttempts == 2) {
+                // Show a custom message dialog for the second wrong attempt
+                      int option = JOptionPane.showOptionDialog(this, label6, "Error", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"Retry", "Exit"}, "Retry");
+
+                if (option == JOptionPane.YES_OPTION) {
+                    // User clicked "Retry," clear the fields
+                    tf1.setText("");
+                    tf2.setText("");
+                    pf1.setText("");
+                    pf1.setBackground(Color.YELLOW); 
+                } else {
+                    System.exit(0); // Exit the application if the user clicks "Cancel"
+                }
+            } else if (wrongAttempts >= 3) {
+                // Show a custom message dialog for the third wrong attempt
+                JOptionPane.showMessageDialog(this, label7, "Account Blocked", JOptionPane.ERROR_MESSAGE);
+                System.exit(0); // Exit the application after three wrong attempts
             }
         }
+    } catch (Exception e) {
+        System.out.println(e);
+    }
+}
     }
 
     public static void main(String[] args) {

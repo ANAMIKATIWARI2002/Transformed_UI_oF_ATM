@@ -69,9 +69,10 @@ class EnglishKeyboard extends JFrame implements ActionListener {
 
         if ("OK".equals(character)) {
             login.isKeyboardOpen = false;
-            setVisible(false); // Hide the keyboard
+            setVisible(false);
+            login.setVisible(true);// Hide the keyboard
             resetFocus();
-            dispose();// Close the keyboard when "OK" button is clicked
+            //dispose();// Close the keyboard when "OK" button is clicked
         } else if ("\u2190".equals(character)) { // Check for backspace button
             String currentText = displayField.getText();
             if (currentText.length() > 0) {

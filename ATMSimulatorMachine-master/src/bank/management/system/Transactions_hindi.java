@@ -111,32 +111,73 @@ public class Transactions_hindi extends JFrame implements ActionListener{
         exit.addActionListener(this);
     }
     
-    public void actionPerformed(ActionEvent ae){
-        if(ae.getSource()==exit){
+    public void actionPerformed(ActionEvent ae) {
+    Font hindiFont = new Font("Mangal", Font.BOLD, 20); // Set the Hindi font
+
+    if (ae.getSource() == exit) {
+        JLabel label5 = new JLabel("क्या आप निकलना चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "निकासी की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             System.exit(0);
-        }else if(ae.getSource()==deposit){
+        }
+    } else if (ae.getSource() == deposit) {
+        JLabel label5 = new JLabel("क्या आप जमा करना चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "जमा करने की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             setVisible(false);
             new Deposite_hindi(pinnumber).setVisible(true);
-        }else if(ae.getSource()==withdrawl){
+        }
+    } else if (ae.getSource() == withdrawl) {
+        JLabel label5 = new JLabel("नकदी निकालना चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "निकासी की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             setVisible(false);
             new withdraw_hindi(pinnumber).setVisible(true);
         }
-        else if(ae.getSource()==fastcash){
+    } else if (ae.getSource() == fastcash) {
+        JLabel label5 = new JLabel("क्या आप तेज़ कैश चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "तेज़ कैश की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             setVisible(false);
             new FastCash_hindi(pinnumber).setVisible(true);
         }
-        else if(ae.getSource()==pinchange){
+    } else if (ae.getSource() == pinchange) {
+        JLabel label5 = new JLabel("क्या आप पिन बदलना चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "पिन बदलने की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             setVisible(false);
             new Pin_hindi(pinnumber).setVisible(true);
         }
-        else if(ae.getSource()==balanceenquiry){
+    } else if (ae.getSource() == balanceenquiry) {
+        JLabel label5 = new JLabel("क्या आप शेष जानना चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "शेष जानने की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             setVisible(false);
             new BalanceEnquiry_hindi(pinnumber).setVisible(true);
         }
-         else if(ae.getSource()==mini){
+    } else if (ae.getSource() == mini) {
+        JLabel label5 = new JLabel("क्या आप मिनी स्टेटमेंट चाहते हैं?");
+        Font customFont1 = new Font("mangal", Font.BOLD, 16);
+        label5.setFont(customFont1);
+        int choice = JOptionPane.showConfirmDialog(this, label5, "मिनी स्टेटमेंट की पुष्टि", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
             new MiniStatement_hindi(pinnumber).setVisible(true);
         }
     }
+}
+
     public static void main(String args[]){
         new Transactions_hindi("");
     }
