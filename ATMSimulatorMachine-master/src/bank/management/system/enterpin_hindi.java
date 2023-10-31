@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 public class enterpin_hindi extends JFrame implements ActionListener {
     JButton withdraw, back;
     String pinnumber;
-    JLabel label5,label6,label7;
+    JLabel label5,label6,label7,label;
     private JPanel keyboardPanel;
     private int wrongAttempts = 0; // Counter for wrong PIN attempts
     private JTextField pinField; // Add a pin text field variable
@@ -104,8 +104,17 @@ public class enterpin_hindi extends JFrame implements ActionListener {
                 try {
                     ResultSet rs = c.s.executeQuery(q1);
                     if (rs.next()) {
-                        setVisible(false);
-                        new exitpage_hindi().setVisible(true);
+                        label = new JLabel("क्या आप वाकई लेनदेन करना चाहते हैं?");
+                            Font customFont1 = new Font("mangal", Font.BOLD, 16);
+                            label.setFont(customFont1);
+                        int choice = JOptionPane.showConfirmDialog(this, label, "लेन-देन की पुष्टि", JOptionPane.YES_NO_OPTION);
+                           if (choice == JOptionPane.YES_OPTION) {
+                            setVisible(false);
+                            new exitpage().setVisible(true);
+                        }else{
+                               setVisible(false);
+                               new Login().setVisible(true);
+                           }
                     } else {
                        
                         wrongAttempts++; // Increment the wrong attempts counter

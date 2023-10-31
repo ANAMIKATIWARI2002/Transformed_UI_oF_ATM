@@ -57,6 +57,12 @@ public class Withdraw extends JFrame implements ActionListener {
         back.setBounds(1095, 478, 138, 64);
         image.add(back);
         back.addActionListener(this);
+        
+        JLabel t = new JLabel("Enter the amount in multiple of 500.");
+        t.setForeground(Color.BLACK);
+        t.setFont(new Font("System", Font.BOLD, 16));
+        t.setBounds(650, 200, 400, 20);
+        image.add(t);
 
         // Create and configure the keyboard panel
         keyboardPanel = new JPanel();

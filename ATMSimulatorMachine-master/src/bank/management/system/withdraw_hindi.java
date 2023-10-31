@@ -57,7 +57,15 @@ public class withdraw_hindi extends JFrame implements ActionListener {
         back.setBounds(1095, 478, 138, 64);
         image.add(back);
         back.addActionListener(this);
-
+        
+        
+        JLabel t = new JLabel("राशि को 500 के गुणक में दर्ज करें।");
+        t.setForeground(Color.BLACK);
+        t.setFont(new Font("mangal", Font.BOLD, 16));
+        t.setBounds(650, 200, 400, 20);
+        image.add(t);
+        
+        
         // Create and configure the keyboard panel
         keyboardPanel = new JPanel();
         keyboardPanel.setLayout(new GridLayout(4, 3)); // 4 rows and 3 columns

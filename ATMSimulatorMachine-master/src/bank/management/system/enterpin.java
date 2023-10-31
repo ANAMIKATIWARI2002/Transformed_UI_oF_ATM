@@ -104,8 +104,14 @@ public class enterpin extends JFrame implements ActionListener {
                 try {
                     ResultSet rs = c.s.executeQuery(q1);
                     if (rs.next()) {
-                        setVisible(false);
-                        new exitpage().setVisible(true);
+                        int choice = JOptionPane.showConfirmDialog(this, "Are you sure you want to make the transaction?", "Transaction Confirmation", JOptionPane.YES_NO_OPTION);
+                           if (choice == JOptionPane.YES_OPTION) {
+                            setVisible(false);
+                            new exitpage().setVisible(true);
+                        }else{
+                               setVisible(false);
+                               new Login().setVisible(true);
+                           }
                     } else {
                        
                         wrongAttempts++; // Increment the wrong attempts counter
